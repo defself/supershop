@@ -1,11 +1,16 @@
 require 'rails_helper'
 
 describe ProductsController do
+  let(:current_user) { create :user }
+
+  before(:each) { sign_in current_user }
 
   let(:valid_attributes) { attributes_for :product }
   let(:invalid_attributes) { attributes_for :product, title: "" }
 
   describe "GET #index" do
+    before(:each) { sign_out current_user }
+
     it "assigns all products as @products" do
       product = Product.create! valid_attributes
       get :index, {}
@@ -14,6 +19,8 @@ describe ProductsController do
   end
 
   describe "GET #show" do
+    before(:each) { sign_out current_user }
+
     it "assigns the requested product as @product" do
       product = Product.create! valid_attributes
       get :show, { id: product.to_param }

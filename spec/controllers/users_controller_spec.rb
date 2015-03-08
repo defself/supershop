@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 describe UsersController do
+  let(:current_user) { create :user }
+
+  before(:each) { sign_in current_user }
 
   let(:valid_attributes) { attributes_for :user }
   let(:invalid_attributes) { attributes_for :user, password: "invalid" }
@@ -9,7 +12,7 @@ describe UsersController do
     it "assigns all users as @users" do
       user = User.create! valid_attributes
       get :index, {}
-      expect(assigns(:users)).to eq([user])
+      expect(assigns(:users).last).to eq(user)
     end
   end
 

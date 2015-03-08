@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 describe CategoriesController do
+  let(:current_user) { create :user }
+
+  before(:each) { sign_in current_user }
 
   let(:valid_attributes) { attributes_for :category }
   let(:invalid_attributes) { attributes_for :category, name: "" }

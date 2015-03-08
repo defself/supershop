@@ -1,4 +1,4 @@
-= form_for @review do |f|
+= form_for [@product, @review] do |f|
   - if @review.errors.any?
     #error_explanation
       %h2= "#{pluralize(@review.errors.count, "error")} prohibited this review from being saved:"
@@ -9,11 +9,5 @@
   .field
     = f.label :msg
     = f.text_area :msg
-  .field
-    = f.label :product
-    = f.text_field :product
-  .field
-    = f.label :user
-    = f.text_field :user
   .actions
     = f.submit 'Save'

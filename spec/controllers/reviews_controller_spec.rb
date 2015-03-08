@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe ReviewsController do
+  let(:current_user) { create :user }
+  let(:product) { create :product }
+
+  before(:each) { sign_in current_user }
 
   let(:valid_attributes) { attributes_for :review }
   let(:invalid_attributes) { attributes_for :review, msg: "" }
@@ -8,7 +12,7 @@ describe ReviewsController do
   describe "GET #index" do
     it "assigns all reviews as @reviews" do
       review = Review.create! valid_attributes
-      get :index, {}
+      get :index, { product_id: product.to_param }
       expect(assigns(:reviews)).to eq([review])
     end
   end
@@ -16,14 +20,14 @@ describe ReviewsController do
   describe "GET #show" do
     it "assigns the requested review as @review" do
       review = Review.create! valid_attributes
-      get :show, { id: review.to_param }
+      get :show, { id: review.to_param, product_id: product.to_param }
       expect(assigns(:review)).to eq(review)
     end
   end
 
   describe "GET #new" do
     it "assigns a new review as @review" do
-      get :new, {}
+      get :new, { product_id: product.to_param }
       expect(assigns(:review)).to be_a_new(Review)
     end
   end
@@ -31,7 +35,7 @@ describe ReviewsController do
   describe "GET #edit" do
     it "assigns the requested review as @review" do
       review = Review.create! valid_attributes
-      get :edit, { id: review.to_param }
+      get :edit, { id: review.to_param, product_id: product.to_param }
       expect(assigns(:review)).to eq(review)
     end
   end
@@ -39,29 +43,29 @@ describe ReviewsController do
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Review" do
-        expect { post :create, { review: valid_attributes }}.to change(Review, :count).by(1)
+        expect { post :create, { review: valid_attributes, product_id: product.to_param }}.to change(Review, :count).by(1)
       end
 
       it "assigns a newly created review as @review" do
-        post :create, { review: valid_attributes }
+        post :create, { review: valid_attributes, product_id: product.to_param }
         expect(assigns(:review)).to be_a(Review)
         expect(assigns(:review)).to be_persisted
       end
 
       it "redirects to the created review" do
-        post :create, { review: valid_attributes }
-        expect(response).to redirect_to(Review.last)
+        post :create, { review: valid_attributes, product_id: product.to_param }
+        expect(response).to redirect_to([product, Review.last])
       end
     end
 
     context "with invalid params" do
       it "assigns a newly created but unsaved review as @review" do
-        post :create, { review: invalid_attributes }
+        post :create, { review: invalid_attributes, product_id: product.to_param }
         expect(assigns(:review)).to be_a_new(Review)
       end
 
       it "re-renders the 'new' template" do
-        post :create, { review: invalid_attributes }
+        post :create, { review: invalid_attributes, product_id: product.to_param }
         expect(response).to render_template("new")
       end
     end
@@ -73,34 +77,34 @@ describe ReviewsController do
 
       it "updates the requested review" do
         review = Review.create! valid_attributes
-        put :update, { id: review.to_param, review: new_attributes }
+        put :update, { id: review.to_param, review: new_attributes, product_id: product.to_param }
         review.reload
         expect(review.msg).to eq "New Review"
       end
 
       it "assigns the requested review as @review" do
         review = Review.create! valid_attributes
-        put :update, { id: review.to_param, review: valid_attributes }
+        put :update, { id: review.to_param, review: valid_attributes, product_id: product.to_param }
         expect(assigns(:review)).to eq(review)
       end
 
       it "redirects to the review" do
         review = Review.create! valid_attributes
-        put :update, { id: review.to_param, review: valid_attributes }
-        expect(response).to redirect_to(review)
+        put :update, { id: review.to_param, review: valid_attributes, product_id: product.to_param }
+        expect(response).to redirect_to([product, review])
       end
     end
 
     context "with invalid params" do
       it "assigns the review as @review" do
         review = Review.create! valid_attributes
-        put :update, { id: review.to_param, review: invalid_attributes }
+        put :update, { id: review.to_param, review: invalid_attributes, product_id: product.to_param }
         expect(assigns(:review)).to eq(review)
       end
 
       it "re-renders the 'edit' template" do
         review = Review.create! valid_attributes
-        put :update, { id: review.to_param, review: invalid_attributes }
+        put :update, { id: review.to_param, review: invalid_attributes, product_id: product.to_param }
         expect(response).to render_template("edit")
       end
     end
@@ -109,13 +113,13 @@ describe ReviewsController do
   describe "DELETE #destroy" do
     it "destroys the requested review" do
       review = Review.create! valid_attributes
-      expect { delete :destroy, { id: review.to_param }}.to change(Review, :count).by(-1)
+      expect { delete :destroy, { id: review.to_param, product_id: product.to_param }}.to change(Review, :count).by(-1)
     end
 
     it "redirects to the reviews list" do
       review = Review.create! valid_attributes
-      delete :destroy, { id: review.to_param }
-      expect(response).to redirect_to(reviews_url)
+      delete :destroy, { id: review.to_param, product_id: product.to_param }
+      expect(response).to redirect_to(product_reviews_url)
     end
   end
 
