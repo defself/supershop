@@ -10,6 +10,7 @@ describe Product do
 
   it "has associations" do
     is_expected.to belong_to :category
+    is_expected.to have_many :reviews
   end
 
   it "saves successfully" do
