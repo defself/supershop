@@ -10,6 +10,10 @@ describe User do
     is_expected.to validate_uniqueness_of :email
   end
 
+  it "has associations" do
+    is_expected.to have_many :reviews
+  end
+
   it "saves successfully" do
     expect(user.save).to be_truthy
   end
