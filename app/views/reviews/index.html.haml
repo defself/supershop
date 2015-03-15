@@ -1,21 +1,17 @@
-%h1 Listing reviews
+%h2 Reviews
 
 %table
   %thead
     %tr
       %th Msg
-      %th
-      %th
-      %th
+      - if admin?
+        %th
+        %th
 
   %tbody
     - @reviews.each do |review|
       %tr
         %td= review.msg
-        %td= link_to 'Show', product_review_path(@product, review)
-        %td= link_to 'Edit', edit_product_review_path(@product, review)
-        %td= link_to 'Destroy', product_review_path(@product, review), method: :delete, data: { confirm: 'Are you sure?' }
-
-%br
-
-= link_to 'New Review', new_product_review_path
+        - if admin?
+          %td= link_to 'Edit', edit_product_review_path(@product, review)
+          %td= link_to 'Destroy', product_review_path(@product, review), method: :delete, data: { confirm: 'Are you sure?' }

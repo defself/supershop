@@ -1,4 +1,5 @@
-= form_for [@product, @review] do |f|
+- remote = @review.new_record? ? { remote: true } : {}
+= form_for [@product, @review], remote do |f|
   - if @review.errors.any?
     #error_explanation
       %h2= "#{pluralize(@review.errors.count, "error")} prohibited this review from being saved:"

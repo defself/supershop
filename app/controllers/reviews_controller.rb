@@ -1,40 +1,39 @@
 class ReviewsController < ApplicationController
-  before_action :set_review, only: [:show, :edit, :update, :destroy]
+  before_action :set_review, only: [:edit, :update, :destroy]
   before_action :set_product
+  skip_before_action :authenticate_user!, only: [:index]
 
   respond_to :html
 
   def index
-    @reviews = Review.all
-    respond_with(@product, @reviews)
-  end
-
-  def show
-    respond_with(@product, @review)
+    @reviews = @product.reviews.order('created_at DESC')
+    respond_with(@reviews, layout: false)
   end
 
   def new
-    @review = Review.new
-    respond_with(@product, @review)
+    @review = @product.reviews.new
+    respond_with(@product, layout: false)
   end
 
   def edit
   end
 
   def create
-    @review = Review.new(review_params)
+    @review = @product.reviews.new(review_params)
     @review.save
-    respond_with(@product, @review)
+    respond_to do |format|
+      format.js
+    end
   end
 
   def update
     @review.update(review_params)
-    respond_with(@product, @review)
+    redirect_to product_path @product
   end
 
   def destroy
     @review.destroy
-    respond_with(@product, @review)
+    redirect_to product_path @product
   end
 
   private

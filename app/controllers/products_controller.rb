@@ -1,5 +1,7 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
+  before_action :is_admin, only: [:edit, :update, :destroy]
+  before_action :all_categories, only: [:new, :edit, :create]
   skip_before_action :authenticate_user!, only: [:index, :show]
 
   respond_to :html
@@ -40,6 +42,10 @@ class ProductsController < ApplicationController
   private
     def set_product
       @product = Product.find(params[:id])
+    end
+
+    def all_categories
+      @categories = Category.all
     end
 
     def product_params
